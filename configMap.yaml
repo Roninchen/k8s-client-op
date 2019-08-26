@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hyperchain-tcp-services
+  namespace: ingress-nginx
+data:
+  "30004": hyperchain/hyperchain-demo-service:98

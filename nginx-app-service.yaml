@@ -1,0 +1,12 @@
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hyperchain-demo-service
+spec:
+  ports:
+    - port: 98
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: hyperchain-demo
