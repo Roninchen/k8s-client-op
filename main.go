@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -128,6 +129,37 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Println(update)
+
+	fmt.Println("================5.rollback all resource================")
+	prompt()
+	// ================5.rollback all resource================
+	fmt.Println("Deleting deployment...")
+	deletePolicy := metav1.DeletePropagationForeground
+	if err := deploymentsClient.Delete("hyperchain-demo", &metav1.DeleteOptions{
+		PropagationPolicy: &deletePolicy,
+	}); err != nil {
+		panic(err)
+	}
+	fmt.Println("Deleted deployment.")
+	prompt()
+	fmt.Println("Deleting service...")
+	if err := services.Delete("hyperchain-demo-service", &metav1.DeleteOptions{
+		PropagationPolicy: &deletePolicy,
+	}); err != nil {
+		panic(err)
+	}
+	fmt.Println("Deleted service...")
+	prompt()
+	fmt.Println("rollback configMap...")
+	update.Data["30004"] = ""
+	rollback, err := configMaps.Update(configMap)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("rollback: ",rollback)
+
+
+
 	//for {
 	//	pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{})
 	//	if err != nil {
@@ -167,5 +199,17 @@ func homeDir() string {
 	return os.Getenv("USERPROFILE") // windows
 }
 func int32Ptr(i int32) *int32 { return &i }
+
+func prompt() {
+	fmt.Printf("-> Press Return key to continue.")
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		break
+	}
+	if err := scanner.Err(); err != nil {
+		panic(err)
+	}
+	fmt.Println()
+}
 
 

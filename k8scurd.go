@@ -1,18 +1,16 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
+	appsv1 "k8s.io/api/apps/v1"
+	apiv1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 	"k8s.io/client-go/util/retry"
-	"os"
 	"path/filepath"
-	appsv1 "k8s.io/api/apps/v1"
-	apiv1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func main() {
@@ -135,16 +133,5 @@ func main() {
 	fmt.Println("Deleted deployment.")
 }
 
-func prompt() {
-	fmt.Printf("-> Press Return key to continue.")
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		break
-	}
-	if err := scanner.Err(); err != nil {
-		panic(err)
-	}
-	fmt.Println()
-}
 
 
